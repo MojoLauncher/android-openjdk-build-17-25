@@ -296,17 +296,15 @@ index 49125ae89..e8b94d131 100644
  // utility functions
  
  julong os::Linux::available_memory_in_container() {
-@@ -479,12 +481,14 @@ bool os::Linux::get_tick_information(CPUPerfTicks* pticks, int which_logical_cpu
+@@ -479,10 +481,12 @@ bool os::Linux::get_tick_information(CPUPerfTicks* pticks, int which_logical_cpu
  
  #ifndef SYS_gettid
- // i386: 224, amd64: 186, sparc: 143
+ // i386: 224, amd64: 186
 -  #if defined(__i386__)
 +  #if defined(__i386__) || defined(__arm__)
      #define SYS_gettid 224
    #elif defined(__amd64__)
      #define SYS_gettid 186
-   #elif defined(__sparc__)
-     #define SYS_gettid 143
 +  #elif defined(__arm64__) || defined(__aarch64__)
 +    #define SYS_gettid 178
    #else
