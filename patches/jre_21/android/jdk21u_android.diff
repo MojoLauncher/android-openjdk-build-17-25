@@ -1396,10 +1396,10 @@ index 3da670ef4..89f2d944a 100644
  #include <signal.h>
 diff --git a/src/java.base/share/native/libtinyiconv/iconv.cpp b/src/java.base/share/native/libtinyiconv/iconv.cpp
 new file mode 100644
-index 000000000..7018b6ce2
+index 000000000..a9c462fdc
 --- /dev/null
 +++ b/src/java.base/share/native/libtinyiconv/iconv.cpp
-@@ -0,0 +1,438 @@
+@@ -0,0 +1,445 @@
 +/*
 + * Copyright (C) 2017 The Android Open Source Project
 + * All rights reserved.
@@ -1440,6 +1440,13 @@ index 000000000..7018b6ce2
 +#include <string.h>
 +#include <uchar.h>
 +#include <wchar.h>
++
++#ifdef ARM
++   #define IV_EXPORT     __attribute__((externally_visible,visibility("default")))
++#else
++   #define IV_EXPORT     __attribute__((visibility("default")))
++#endif
++
 +
 +__BEGIN_DECLS
 +
@@ -1804,7 +1811,7 @@ index 000000000..7018b6ce2
 +  }
 +};
 +
-+iconv_t iconv_open(const char* __dst_encoding, const char* __src_encoding) {
++IV_EXPORT extern "C" iconv_t iconv_open(const char* __dst_encoding, const char* __src_encoding) {
 +  iconv_t result = iconv_t();
 +  result->mode = ERROR;
 +  if (!__parse_encoding(__src_encoding, &result->src_encoding, 0 /* nullptr */) ||
@@ -1816,7 +1823,7 @@ index 000000000..7018b6ce2
 +  return result;
 +}
 +
-+size_t iconv(iconv_t __converter,
++IV_EXPORT extern "C" size_t iconv(iconv_t __converter,
 +             char** __src_buf, size_t* __src_bytes_left,
 +             char** __dst_buf, size_t* __dst_bytes_left) {
 +  if (__converter == INVALID_ICONV_T) {
@@ -1826,7 +1833,7 @@ index 000000000..7018b6ce2
 +  return __converter->Convert(__src_buf, __src_bytes_left, __dst_buf, __dst_bytes_left);
 +}
 +
-+int iconv_close(iconv_t __converter) {
++IV_EXPORT extern "C" int iconv_close(iconv_t __converter) {
 +  if (__converter == INVALID_ICONV_T) {
 +    errno = EBADF;
 +    return -1;
