@@ -1,0 +1,32 @@
+diff --git a/src/java.base/unix/native/libnio/fs/UnixNativeDispatcher.c b/src/java.base/unix/native/libnio/fs/UnixNativeDispatcher.c
+index 9499bae2d..c3de81cf6 100644
+--- a/src/java.base/unix/native/libnio/fs/UnixNativeDispatcher.c
++++ b/src/java.base/unix/native/libnio/fs/UnixNativeDispatcher.c
+@@ -300,6 +300,15 @@ static void throwUnixException(JNIEnv* env, int errnum) {
+     }
+ }
+ 
++#if defined(__linux__)
++static int test_statx(void) {
++   struct my_statx statxbuf;
++   int res = statx_wrapper(0, "/", AT_STATX_SYNC_AS_STAT, LOCAL_STATX_ALL, &statxbuf);
++   if (res == 0) return; // Yeah sure whatever
++   return errno != ENOSYS;
++}
++#endif
++
+ /**
+  * Initialization
+  */
+@@ -431,8 +440,10 @@ Java_sun_nio_fs_UnixNativeDispatcher_init(JNIEnv* env, jclass this)
+ #endif
+ #if defined(__linux__)
+     my_statx_func = (statx_func*) dlsym(RTLD_DEFAULT, "statx");
+-    if (my_statx_func != NULL) {
++    if (my_statx_func != NULL && test_statx()) {
+         capabilities |= sun_nio_fs_UnixNativeDispatcher_SUPPORTS_BIRTHTIME;
++    } else {
++        my_statx_func = NULL;
+     }
+ #endif
+ 
