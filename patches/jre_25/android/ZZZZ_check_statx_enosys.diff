@@ -10,7 +10,7 @@ index 9499bae2d..c3de81cf6 100644
 +static int test_statx(void) {
 +   struct my_statx statxbuf;
 +   int res = statx_wrapper(0, "/", AT_STATX_SYNC_AS_STAT, LOCAL_STATX_ALL, &statxbuf);
-+   if (res == 0) return; // Yeah sure whatever
++   if (res == 0) return 1; // Yeah sure whatever
 +   return errno != ENOSYS;
 +}
 +#endif
