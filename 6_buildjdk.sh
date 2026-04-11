@@ -56,6 +56,10 @@ if [[ "$BUILD_IOS" != "1" ]]; then
   export CFLAGS+=" -mllvm -polly -DANDROID -Wno-error=implicit-function-declaration -Wno-error=int-conversion"
   export LDFLAGS+=" -L$PWD/dummy_libs -Wl,--undefined-version"
 
+  if [[ "$TARGET_JDK" == "aarch64" || "$TARGET_JDK" == "x86_64" ]]; then
+     export LDFLAGS+=" -Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384"
+  fi
+
 # Create dummy libraries so we won't have to remove them in OpenJDK makefiles
   mkdir -p dummy_libs
   ar cru dummy_libs/libpthread.a
