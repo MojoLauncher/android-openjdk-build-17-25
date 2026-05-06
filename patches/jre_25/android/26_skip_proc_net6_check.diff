@@ -1,0 +1,21 @@
+// skip some checks as AOSP does
+diff --git a/src/java.base/unix/native/libnet/net_util_md.c b/src/java.base/unix/native/libnet/net_util_md.c
+index fc89b9101..a50f7ccd7 100644
+--- a/src/java.base/unix/native/libnet/net_util_md.c
++++ b/src/java.base/unix/native/libnet/net_util_md.c
+@@ -111,6 +111,7 @@ jint  IPv6_supported()
+     SOCKETADDRESS sa;
+     socklen_t sa_len = sizeof(SOCKETADDRESS);
+ 
++#ifndef __ANDROID__ // ANDROID: skip check, see libcore commit ae218d9b
+     fd = socket(AF_INET6, SOCK_STREAM, 0) ;
+     if (fd < 0) {
+         /*
+@@ -141,6 +142,7 @@ jint  IPv6_supported()
+         }
+     }
+ #endif
++#endif // !defined __ANDROID__
+ 
+     /*
+      *  OK we may have the stack available in the kernel,
