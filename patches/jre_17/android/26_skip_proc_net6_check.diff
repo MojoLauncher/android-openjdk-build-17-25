@@ -1,6 +1,6 @@
 // skip some checks as AOSP does
 diff --git a/src/java.base/unix/native/libnet/net_util_md.c b/src/java.base/unix/native/libnet/net_util_md.c
-index 4ec11a136..01b85db4d 100644
+index 139cb27b4..992da0f39 100644
 --- a/src/java.base/unix/native/libnet/net_util_md.c
 +++ b/src/java.base/unix/native/libnet/net_util_md.c
 @@ -129,6 +129,7 @@ jint  IPv6_supported()
@@ -11,7 +11,7 @@ index 4ec11a136..01b85db4d 100644
      fd = socket(AF_INET6, SOCK_STREAM, 0) ;
      if (fd < 0) {
          /*
-@@ -172,6 +173,7 @@ jint  IPv6_supported()
+@@ -172,13 +173,16 @@ jint  IPv6_supported()
          }
      }
  #endif
@@ -19,3 +19,12 @@ index 4ec11a136..01b85db4d 100644
  
      /*
       *  OK we may have the stack available in the kernel,
+      *  we should also check if the APIs are available.
+      */
+     ipv6_fn = JVM_FindLibraryEntry(RTLD_DEFAULT, "inet_pton");
++#ifndef __ANDROID__
+     close(fd);
++#endif
+     if (ipv6_fn == NULL ) {
+         return JNI_FALSE;
+     } else {
