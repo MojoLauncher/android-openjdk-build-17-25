@@ -44,17 +44,14 @@ diff --git a/make/autoconf/libraries.m4 b/make/autoconf/libraries.m4
 index 8dc3d55ed..948bf27f3 100644
 --- a/make/autoconf/libraries.m4
 +++ b/make/autoconf/libraries.m4
-@@ -42,8 +42,8 @@ m4_include([lib-tests.m4])
- AC_DEFUN_ONCE([LIB_DETERMINE_DEPENDENCIES],
- [
+@@ -44,6 +44,7 @@ AC_DEFUN_ONCE([LIB_DETERMINE_DEPENDENCIES],
    # Check if X11 is needed
--  if test "x$OPENJDK_TARGET_OS" = xwindows || test "x$OPENJDK_TARGET_OS" = xmacosx; then
--    # No X11 support on windows or macosx
-+  if test "x$OPENJDK_TARGET_OS" = xwindows || test "x$OPENJDK_TARGET_OS" = xmacosx || test "x$OPENJDK_TARGET_OS" = xandroid; then
-+    # No X11 support on windows, macosx or android
+   if test "x$OPENJDK_TARGET_OS" = xwindows ||
+      test "x$OPENJDK_TARGET_OS" = xmacosx ||
++     test "x$OPENJDK_TARGET_OS" = xandroid ||
+      test "x$ENABLE_HEADLESS_ONLY" = xtrue; then
      NEEDS_LIB_X11=false
    else
-     # All other instances need X11, even if building headless only, libawt still
 @@ -52,8 +52,8 @@ AC_DEFUN_ONCE([LIB_DETERMINE_DEPENDENCIES],
    fi
  
