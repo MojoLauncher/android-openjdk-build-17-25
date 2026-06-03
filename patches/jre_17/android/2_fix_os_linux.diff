@@ -132,17 +132,18 @@ index ae0c73dcb..e2c9a21f7 100644
  }
 
  static bool _print_ascii_file(const char* filename, outputStream* st, const char* hdr = NULL) {
-@@ -2538,6 +2576,19 @@ void os::jvm_path(char *buf, jint buflen) {
+@@ -2643,6 +2685,20 @@ void os::jvm_path(char *buf, jint buflen) {
                                           CAST_FROM_FN_PTR(address, os::jvm_path),
                                           dli_fname, sizeof(dli_fname), NULL);
    assert(ret, "cannot locate libjvm");
 +#ifdef __ANDROID__
++  const char* libname = dli_fname;
 +  if (dli_fname[0] == '\0') {
-+    return;
++    libname = "libjvm.so";
 +  }
 +
 +  if (strchr(dli_fname, '/') == NULL) {
-+    bool ok = read_so_path_from_maps(dli_fname, buf, buflen);
++    bool ok = read_so_path_from_maps(libname, buf, buflen);
 +    assert(ok, "unable to turn relative libjvm.so path into absolute");
 +    return;
 +  }

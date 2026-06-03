@@ -42,11 +42,16 @@ index fbd6ce9d1..94d238f8e 100644
  jint
  AWT_OnLoad(JavaVM *vm, void *reserved)
  {
-@@ -121,7 +146,11 @@ AWT_OnLoad(JavaVM *vm, void *reserved)
+@@ -121,7 +146,16 @@ AWT_OnLoad(JavaVM *vm, void *reserved)
  #ifndef STATIC_BUILD
      /* Get address of this library and the directory containing it. */
      dladdr((void *)AWT_OnLoad, &dlinfo);
 -    realpath((char *)dlinfo.dli_fname, buf);
++#ifdef __ANDROID__
++    if(dlinfo.dli_fname[0] == '\0') {
++       dlinfo.dli_fname = "libawt.so"; // workaround for ASUS linker bug
++    }
++#endif
 +    if (strrchr(dlinfo.dli_fname, '/') != NULL) {
 +        realpath((char *)dlinfo.dli_fname, buf);
 +    }else{
