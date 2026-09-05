@@ -3,31 +3,6 @@
 // - allow android as an accepted target
 // - forces the use of the PIC flag
 // - Surely other things
-diff --git a/make/autoconf/build-aux/config.sub b/make/autoconf/build-aux/config.sub
-index 8f5a5cf52..34943b6ed 100644
---- a/make/autoconf/build-aux/config.sub
-+++ b/make/autoconf/build-aux/config.sub
-@@ -47,7 +47,8 @@ if echo $* | grep pc-msys >/dev/null ; then
- fi
- 
- # Filter out everything that doesn't begin with "aarch64-"
--if ! echo $* | grep '^aarch64-' >/dev/null ; then
-+# or that ends with "-android"
-+if ! echo $* | egrep "^aarch64-|-android" >/dev/null ; then
-     . $DIR/autoconf-config.sub "$@"
-     # autoconf-config.sub exits, so we never reach here, but just in
-     # case we do:
-@@ -58,6 +59,10 @@ while test $# -gt 0 ; do
-     case $1 in
-         -- )   # Stop option processing
-             shift; break ;;
-+        *-android* )
-+            echo $1
-+            exit
-+            ;;
-         aarch64-* )
-             config=`echo $1 | sed 's/^aarch64-/arm-/'`
-             sub_args="$sub_args $config"
 diff --git a/make/autoconf/flags-cflags.m4 b/make/autoconf/flags-cflags.m4
 index 5eed1138f..b4319de67 100644
 --- a/make/autoconf/flags-cflags.m4
