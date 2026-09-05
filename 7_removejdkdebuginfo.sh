@@ -27,6 +27,11 @@ if [[ "$TARGET_JDK" == "aarch64" ]] || [[ "$TARGET_JDK" == "x86_64" ]]; then
    export EXTRA_JLINK_OPTION=,jdk.internal.vm.ci
 fi
 
+if [[ "$TARGET_VERSION" == "17" ]] || [[ "$TARGET_VERSION" == "21" ]]; then
+   echo "Building JRE 17 or 21, adding jdk.random"
+   EXTRA_JLINK_OPTION+=,jdk.random
+fi
+
 # Produce the jre equivalent from the jdk (https://blog.adoptium.net/2021/10/jlink-to-produce-own-runtime/)
 if [[ "$BUILD_IOS" != "1" ]]; then
    export JLINK_STRIP_ARG="--strip-native-debug-symbols=exclude-debuginfo-files:objcopy=${OBJCOPY}"
