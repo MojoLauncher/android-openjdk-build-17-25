@@ -16,6 +16,11 @@ else
   fi
 fi
 
+if [[ "$TARGET_JDK" == "aarch64" ]] || [[ "$TARGET_JDK" == "x86_64" ]]
+then
+  export JVM_FEATURES+=",shenandoahgc"
+fi
+
 # if [[ "$TARGET_JDK" == "aarch32" ]] || [[ "$TARGET_JDK" == "aarch64" ]]
 # then
 #   export CFLAGS+=" -march=armv7-a+neon"
@@ -122,7 +127,7 @@ bash ./configure \
     --enable-headless-only=yes \
     --with-build-jdk=$JAVA_HOME \
     --with-jvm-variants=$JVM_VARIANTS \
-    --with-jvm-features=-dtrace,-zero,-vm-structs,-epsilongc \
+    --with-jvm-features=-dtrace,-zero,-vm-structs,-epsilongc$JVM_FEATURES \
     --with-cups-include=$CUPS_DIR \
     --with-devkit=$TOOLCHAIN \
     --with-native-debug-symbols=external \
