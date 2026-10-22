@@ -1,0 +1,22 @@
+diff --git a/src/java.base/unix/native/libnio/fs/UnixNativeDispatcher.c b/src/java.base/unix/native/libnio/fs/UnixNativeDispatcher.c
+index 7bc14a0da..87960e5d8 100644
+--- a/src/java.base/unix/native/libnio/fs/UnixNativeDispatcher.c
++++ b/src/java.base/unix/native/libnio/fs/UnixNativeDispatcher.c
+@@ -873,7 +923,7 @@ Java_sun_nio_fs_UnixNativeDispatcher_chmod0(JNIEnv* env, jclass this,
+ 
+     RESTARTABLE(chmod(path, (mode_t)mode), err);
+     if (err == -1) {
+-        throwUnixException(env, errno);
++        printf("chmod %s %#o failed, let's pretend it didn't happen\n", path, (int) mode);
+     }
+ }
+ 
+@@ -885,7 +935,7 @@ Java_sun_nio_fs_UnixNativeDispatcher_fchmod(JNIEnv* env, jclass this, jint filed
+ 
+     RESTARTABLE(fchmod((int)filedes, (mode_t)mode), err);
+     if (err == -1) {
+-        throwUnixException(env, errno);
++        printf("chmod fd %i %#o failed, let's pretend it didn't happen\n", (int) filedes, (int) mode);
+     }
+ }
+ 
